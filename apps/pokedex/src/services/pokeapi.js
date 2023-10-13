@@ -23,3 +23,16 @@ export async function getPokemonById(id) {
 
     return resp.json();
 }
+
+export async function getPokemonList(limit = 25) {
+    const URI = new URL(`pokemon?limit=${limit}`, BASE_URL);
+
+    const resp = await fetch(URI.href);
+
+    if (!resp.ok) {
+        return Promise.reject(await resp.json());
+    }
+
+    const data = await resp.json();
+    return data; 
+}

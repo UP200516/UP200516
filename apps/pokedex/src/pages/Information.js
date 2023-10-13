@@ -1,57 +1,35 @@
-import { Button, Text, View, } from 'react-native';
-import { Link, useParams } from 'react-router-native';
-import { useEffect, useState } from 'react';
-
-// Services 
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image } from 'react-native';
+import { useParams, Link} from 'react-router-native';
 import { getPokemonById } from '../services/pokeapi';
+import PokemonInfo from '../components/PokemonInfo';
 
-function Information() {
-    const [pokemon, setPokemon] = useState();
+const Information = () => {
 
-    const { pokemonid } = useParams();
+    const [pokemon, setPokemon] = useState(null);
+    
+    const {pokemonid} = useParams();
 
     useEffect(() => {
-        // Manera de Hacelo con promesas
-        // getPokemonById(pokemonid)
-        //     .then((pokeInofrmation) => {
-        //         console.log(pokeInofrmation);
-        //     })
-        //     .catch((error) => {
-        //     })
-        //     .finally(() => {
-
-        //     });
-
-        // Async/Await -> Funcion 
-        // const fn = async () => {
-        //     const pokeInformation = await getPokemonById(pokemonid);
-
-        //     console.log(pokeInformation);
-        // };
-        // fn();
-
-        // Async/Await -> IEFI
-        (async () => {
-            try {
-                const pokeInformation = await getPokemonById(pokemonid);
-                setPokemon(pokeInformation);
+        const fetchPokemon = async () => {
+            try{
+                const InformacionPokemon = await getPokemonById(pokemonid);
+                setPokemon(InformacionPokemon);
+                console.log(pokemon);
             } catch (error) {
-                console.error(error);
-            } finally {
-                console.log('end!!!');
+                console.log(error);
             }
-        })();
-
-    }, []);
+        };
+        fetchPokemon();
+    }, [pokemonid]);
 
     return (
         <View>
-            <Text>Information Page</Text>
-            <Text>{pokemonid}</Text>
-
-            <Link to='/'>
-                <Text> Go To Home!!!</Text>
-            </Link>
+            {pokemon ? (
+                <PokemonInfo pokemon={pokemon} />
+            ) : ( 
+                <Text>Cargando...</Text>
+            )}
         </View>
     );
 }
